@@ -1,0 +1,97 @@
+﻿@model Haneef_Uploadify.Models.News
+@{
+        ViewBag.Title = "Index";
+}
+<link href="~/Scripts/Uploadify/uploadify.css" rel="stylesheet" />
+<script src="~/Scripts/Uploadify/jquery.uploadify.min.js"></script>
+<script src="~/Scripts/Tinymce/tinymce.min.js"></script>
+
+ <script>
+    tinymce.init({
+        selector: '#Content',
+        height: 500,
+        theme: 'modern',
+        plugins: [
+          'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+          'searchreplace wordcount visualblocks visualchars code fullscreen',
+          'insertdatetime media nonbreaking save table contextmenu directionality',
+          'emoticons template paste textcolor colorpicker textpattern imagetools'
+        ],
+        toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+        toolbar2: 'print preview media | forecolor backcolor emoticons ',
+        image_advtab: true,
+  
+
+     });
+</script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            
+            $('#file_upload').uploadify({
+         
+                'swf': '/Scripts/Uploadify/uploadify.swf',
+                'uploader': "@Url.Action("Upload", "News")",               
+                'cancelImg': "@Url.Content("/Scripts/Uploadify/uploadify-cancel.png")",
+                'fileSizeLimit': '1MB', // Add Kb, MB, GB
+                'buttonText': 'Insert Images...', //Text for button
+                'queueSizeLimit': 10, // Max number of files allowed
+                'fileTypeDesc': 'Image Files',
+              'fileTypeExts': '*.gif; *.jpg; *.png', // File type allowed
+                'onUploadSuccess' : function(file, data, response) {
+                 tinyMCE.activeEditor.execCommand("mceInsertContent", true, "<img src='" + data + "' alt='Uploaded Image' class='img-responsive' />");
+                }
+           
+            })
+            
+        }
+);
+</script>
+  
+
+<div class="panel panel-primary">
+    <div class="panel-heading panel-head">Add News</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Index", "News", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, new { @class = "col-lg-2 control-label" })
+                    <div class="col-lg-9">
+                        @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Image, new { @class = "col-lg-2 control-label" })
+                    <div class="col-lg-9">
+                        <input type="file" name="Img" id="file_upload" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Content, new { @class = "col-lg-2 control-label" })
+                    <div class="col-lg-9">
+                        @Html.TextAreaFor(model => model.Content, new { @class = "form-control", @row = 5 })
+                    </div>
+                </div>
+
+
+                @*<div class="form-group" id="uploaded">
+          
+                    </div>*@
+
+
+
+                    <div class="form-group">
+                        <div class="col-lg-9"></div>
+                        <div class="col-lg-3">
+                            <button class="btn btn-success" id="btnSubmit" type="submit">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            }
+    </div>
+</div>
